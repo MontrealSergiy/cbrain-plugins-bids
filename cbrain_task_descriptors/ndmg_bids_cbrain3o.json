@@ -1,0 +1,190 @@
+{
+  "name": "ndmg (BIDS app)",
+  "tool-version": "v0.1.0",
+  "description": "See https://github.com/BIDS-Apps/ndmg",
+  "command-line": "mkdir -p OUTPUT_DIR1; if [ ! z PARTICIPANT_DIR]; then mv -a PARTICIPANT_DIR/* OUTPUT_DIR1/; fi; ndmg_bids BIDS_DIR OUTPUT_DIR1 PARTICIPANT_DIR ANALYSIS_LEVEL PARTICIPANT_LABEL SESSION_LABEL DATASET ATLAS MINIMAL HEMISPHERES LOG DEBUG",
+  "container-image": {
+    "type": "singularity",
+    "index": "docker://",
+    "image": "bids/ndmg"
+  },
+  "schema-version": "0.5",
+  "inputs": [
+    {
+      "id": "bids_dir",
+      "name": "BIDS directory",
+      "type": "File",
+      "description": "The directory with the input dataset formatted according to the BIDS standard.",
+      "value-key": "BIDS_DIR",
+      "optional": false
+    },
+    {
+      "id": "output_dir_name",
+      "name": "Output directory name",
+      "type": "String",
+      "description": "The directory will be created, where the output files would be saved. ",
+      "value-key": "OUTPUT_DIR1",
+      "optional": false,
+      "default-value": "ndmg_results"
+    },
+    {
+      "id": "analysis_level",
+      "name": "Analysis level",
+      "type": "String",
+      "optional": false,
+      "value-key": "ANALYSIS_LEVEL",
+      "value-choices": [
+        "participant",
+        "group",
+        "session"
+      ],
+      "description": "Level of the analysis that will be performed. Multiple participant level analyses can be run independently (in parallel)."
+    },
+     {
+      "id": "participant_level_analysis_dir",
+      "name": "Directory with previously computed participant level result (Mandatory for group analysis)",
+      "type": "File",
+      "description": "The directory containing the output of the participants level analysis is required If you are running a GROUP level analysis, use another option.",
+      "value-key": "PARTICIPANT_DIR",
+      "optional": true
+    },
+    {
+      "id": "participant_label",
+      "name": "Participant labels",
+      "type": "String",
+      "value-key": "PARTICIPANT_LABEL",
+      "command-line-flag": "--participant_label",
+      "list": true,
+      "optional": true,
+      "description": "The label(s) of the participant(s) that should be analyzed. The label corresponds to sub-<participant_label> from the BIDS spec (so it does not include \"sub-\"). If this parameter is not provided all subjects will be analyzed. Multiple participants can be specified with a space separated list."
+    },
+    {
+      "id": "session_label",
+      "name": "Session labels",
+      "type": "String",
+      "value-key": "SESSION_LABEL",
+      "command-line-flag": "--session_label",
+      "list": true,
+      "optional": true,
+      "description": "The label(s) of the session(s) that should be analyzed. The label corresponds to ses-<session_label>, an extension of the BIDS spec (so it does not include \"ses-\"). If this parameter is not provided all sessions will be analyzed. Multiple sessions can be specified with a space separated list."
+    },
+    {
+      "id": "dataset",
+      "name": "Dataset",
+      "type": "String",
+      "value-key": "DATASET",
+      "command-line-flag": "--dataset",
+      "optional": true,
+      "description": "The name of the dataset you are perfoming QC on."
+    },
+    {
+      "id": "minimal",
+      "name": "Minimal",
+      "type": "Flag",
+      "value-key": "MINIMAL",
+      "command-line-flag": "--minimal",
+      "optional": true,
+      "description": "Determines whether to show a minimal or full set of plots."
+    },
+    {
+      "id": "hemispheres",
+      "name": "Hemispheres",
+      "type": "Flag",
+      "value-key": "HEMISPHERES",
+      "command-line-flag": "--hemispheres",
+      "optional": true,
+      "description": "Whether or not to break degrees into hemispheres or not."
+    },
+    {
+      "id": "atlas",
+      "name": "Atlas",
+      "type": "String",
+      "value-key": "ATLAS",
+      "command-line-flag": "--atlas",
+      "optional": true,
+      "description": "The atlas being analyzed in QC (if you only want one)."
+    },
+    {
+      "id": "log",
+      "name": "Log",
+      "type": "Flag",
+      "value-key": "LOG",
+      "command-line-flag": "--log",
+      "optional": true,
+      "description": "Determines axis scale for plotting."
+    },
+    {
+      "id": "debug",
+      "name": "Debug",
+      "type": "Flag",
+      "value-key": "DEBUG",
+      "command-line-flag": "--debug",
+      "optional": true,
+      "description": "flag to store temp files along the path of processing."
+    }
+  ],
+  "output-files": [
+    {
+      "id": "output_dir_1",
+      "name": "Output directory",
+      "description": "The directory where the output files should be stored. ",
+      "path-template": "OUTPUT_DIR1",
+      "optional": true
+    },
+    {
+      "id": "output_dir_2",
+      "name": "Derivatives and output directory",
+      "description": "The directory where the output files should be stored. If you are running a group level analysis, use another options.",
+      "path-template": "group-PARTICIPANT_DIR",
+      "optional": true
+    }
+  ],
+  "groups": [
+    {
+      "id": "output_directory",
+      "name": "Derivative directories",
+      "members": [
+        "output_dir_name",
+        "participant_level_analysis_dir"
+      ],
+      "description": "For a group analysis, a directory that already contains the output of participant-level analyses must be selected. ",
+      "mutually-exclusive": false
+    },
+    {
+      "id": "label",
+      "name": "Label",
+      "members": [
+        "session_label",
+        "participant_label"
+      ],
+      "description": "Using specific sessions or participants (for session or participant analysis levels).",
+      "mutually-exclusive": true,
+      "one-is-required": false
+    },
+    {
+      "id": "plotting",
+      "name": "Plotting",
+      "members": [
+        "minimal",
+        "hemispheres",
+        "log"
+      ],
+      "description": "Select plotting options",
+      "mutually-exclusive": false,
+      "one-is-required": false
+    },
+    {
+      "id": "qa",
+      "name": "Quality",
+      "members": [
+        "debug",
+        "atlas",
+        "dataset"
+      ],
+      "description": "Quality and trouble-shouting",
+      "mutually-exclusive": false,
+      "one-is-required": false
+
+    }
+  ]
+}
