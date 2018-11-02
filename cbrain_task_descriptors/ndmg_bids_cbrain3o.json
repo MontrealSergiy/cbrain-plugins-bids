@@ -2,7 +2,7 @@
   "name": "ndmg (BIDS app)",
   "tool-version": "v0.1.0",
   "description": "See https://github.com/BIDS-Apps/ndmg",
-  "command-line": "mkdir -p OUTPUT_DIR1; if [ ! z PARTICIPANT_DIR]; then mv -a PARTICIPANT_DIR/* OUTPUT_DIR1/; fi; ndmg_bids BIDS_DIR OUTPUT_DIR1 PARTICIPANT_DIR ANALYSIS_LEVEL PARTICIPANT_LABEL SESSION_LABEL DATASET ATLAS MINIMAL HEMISPHERES LOG DEBUG",
+  "command-line": "mkdir -p OUTPUT_DIR1; if [ ! z PARTICIPANT_DIR]; then mv -a PARTICIPANT_DIR/* OUTPUT_DIR1/; fi; ndmg_bids BIDS_DIR OUTPUT_DIR1 ANALYSIS_LEVEL PARTICIPANT_LABEL SESSION_LABEL DATASET ATLAS MINIMAL HEMISPHERES LOG DEBUG",
   "container-image": {
     "type": "singularity",
     "index": "docker://",
