@@ -1,10 +1,10 @@
 {
-    "command-line": "$BEST_DIR/run_BEst.sh $MCR_ROOT [RECORDINGS] [LEADFIELD] [ADJACENCY_MATRIX] [OUTFILE] [MEM_METHOD] \"[SENSOR_TYPES]\" \"[RECONSTRUCTION_WINDOW]\" \"[BASELINE_WINDOW]\" [BASELINE] [NORMALIZATION] [CLUSTERING_METHOD] [MSP_WINDOW] [MSP_THRESHOLD_METHOD] [MSP_THRESHOLD] [NEIGHBORHOOD_ORDER] [SPATIAL_SMOOTHING] [ACTIVE_MEAN_INIT] [ACTIVE_PROBA_INIT] [LAMBDA_INIT] [ACTIVE_PROBA_THRESHOLD] [ACTIVE_VAR_COEF] [INACTIVE_VAR_COEF] [NOISE_COV_METHOD] [OPTIM_METHOD] [USE_PARALLEL]", 
+    "command-line": "$BEST_DIR/run_BEst.sh $MCR_ROOT [RECORDINGS] [LEADFIELD] [ADJACENCY_MATRIX] [SOURCES] [MEM_METHOD] \"[SENSOR_TYPES]\" \"[RECONSTRUCTION_WINDOW]\" \"[BASELINE_WINDOW]\" [BASELINE] [NORMALIZATION] [CLUSTERING_METHOD] [MSP_WINDOW] [MSP_THRESHOLD_METHOD] [MSP_THRESHOLD] [NEIGHBORHOOD_ORDER] [SPATIAL_SMOOTHING] [ACTIVE_MEAN_INIT] [ACTIVE_PROBA_INIT] [LAMBDA_INIT] [ACTIVE_PROBA_THRESHOLD] [ACTIVE_VAR_COEF] [INACTIVE_VAR_COEF] [NOISE_COV_METHOD] [OPTIM_METHOD] [USE_PARALLEL]", 
     "container-image": {
         "image": "best",
         "type": "singularity"
     }, 
-    "name": "BEst Toolbox", 
+    "name": "BEst", 
     "author": "Obaï Bin Ka’b Ali",
     "description": "EEG/MEG source localisation techniques based upon the Maximum Entropy on the Mean framework", 
     "inputs": [
@@ -31,9 +31,11 @@
         },
         {
             "id": "outfile", 
-            "name": "Output file path", 
+            "name": "Output file",
+            "description": "Name of the output file with extension '.mat'", 
             "type": "String", 
             "optional": false,
+            "default-value": "sources.mat",
             "value-key": "[OUTFILE]"
         },
         {
@@ -44,6 +46,7 @@
             "value-choices": [
                 "cMEM"
             ],
+            "default-value": "cMEM",
             "value-key": "[MEM_METHOD]"
         }, 
         {
@@ -62,8 +65,8 @@
         }, 
         {
             "id": "reconstruction_window", 
-            "name": "Localisation time window", 
-            "description": "Recording data time definition in seconds",
+            "name": "Reconstruction time window", 
+            "description": "User should know its recording data time definition and provide '[time_begin, time_end]' (with time in seconds)",
             "type": "Number",
             "optional": false,
             "list": true,
@@ -75,7 +78,7 @@
         {
             "id": "baseline_window", 
             "name": "Baseline time window", 
-            "description": "Baseline time definition in seconds",
+            "description": "User should know its baseline data time definition and provide '[time_begin, time_end]' (with time in seconds)",
             "type": "Number",
             "optional": false,
             "list": true,
@@ -87,6 +90,7 @@
         {
             "id": "baseline", 
             "name": "Baseline data", 
+            "description": "Path to a file with extension '.mat'. NOTE: if the string is empty (default) then the baseline data will be extracted from the recording data.",
             "type": "File",
             "optional": true,
             "command-line-flag": "baseline",
@@ -108,6 +112,7 @@
         {
             "id": "clustering_method", 
             "name": "Clustering method",
+            "description": "If 'dynamic' is selected, the option 'MSP window' is used)",
             "type": "String", 
             "optional": true,
             "default-value": "static",
@@ -135,6 +140,7 @@
         {
             "id": "msp_window", 
             "name": "MSP window",
+            "description": "Used only if 'Clusters type' is set to 'dynamic')",
             "type": "Number",
             "optional": true,
             "minimum": 0,
@@ -145,6 +151,7 @@
         {
             "id": "msp_threshold_method", 
             "name": "MSP scores threshold method",
+            "description": "If 'dynamic' is selected, the option 'MSP scores threshold' is used)",
             "type": "String", 
             "optional": true,
             "default-value": "arbitrary",
@@ -172,6 +179,7 @@
         {
             "id": "msp_threshold", 
             "name": "MSP scores threshold",
+            "description": "Used only if 'MSP scores threshold method' is set to 'arbitrary'",
             "type": "Number",
             "optional": true,
             "minimum": 0,
@@ -205,11 +213,16 @@
         {
             "id": "active_mean_init", 
             "name": "Active mean initialization",
+            "description": "1: regular minimum norm, 2: default – null hypothesis, 3: MSP-regularized minimum norm), 4: L-curve optimized Minimum Norm Estimate",
             "type": "Number",
             "optional": true,
             "integer": true,
-            "minimum": 1,
-            "maximum": 4,
+            "value-choices": [
+                1,
+                2, 
+                3, 
+                4
+            ],
             "default-value": 2,
             "command-line-flag": "activeMeanInit",
             "value-key": "[ACTIVE_MEAN_INIT]"
@@ -217,11 +230,17 @@
         {
             "id": "active_proba_init", 
             "name": "Active probability initialization",
+            "description": "1: mean MSP scores, 2: max MSP scores, 3: default – median MSP scores, 4: equal to 0.5, 5: equal to 1",
             "type": "Number",
             "optional": true,
             "integer": true,
-            "minimum": 1,
-            "maximum": 5,
+            "value-choices": [
+                1,
+                2, 
+                3, 
+                4,
+                5
+            ],
             "default-value": 3,
             "command-line-flag": "activeProbaInit",
             "value-key": "[ACTIVE_PROBA_INIT]"
@@ -229,11 +248,14 @@
         {
             "id": "lambda_init", 
             "name": "Lambda initialization",
+            "description": "0: null hypothesis, 1: default – random",
             "type": "Number",
             "optional": true,
             "integer": true,
-            "minimum": 0,
-            "maximum": 1,
+            "value-choices": [
+                0,
+                1
+            ],
             "default-value": 1,
             "command-line-flag": "lambdaInit",
             "value-key": "[LAMBDA_INIT]"
@@ -274,11 +296,17 @@
         {
             "id": "noise_cov_method", 
             "name": "Noise covariance method",
+            "description": "0: identity, 1: diagonal with same variance along diagonal, 2: default – diagonal, 3: full, 4: wavelet-based",
             "type": "Number",
             "optional": true,
             "integer": true,
-            "minimum": 0,
-            "maximum": 4,
+            "value-choices": [
+                0,
+                1,
+                2, 
+                3, 
+                4
+            ],
             "default-value": 2,
             "command-line-flag": "noiseCovMethod",
             "value-key": "[NOISE_COV_METHOD]"
@@ -299,11 +327,14 @@
         {
             "id": "use_parallel",
             "name": "Parallel computing",
+            "description": "0: default - false, 1: true",
             "type": "Number",
             "optional": true,
             "integer": true,
-            "minimum": 0,
-            "maximum": 1,
+            "value-choices": [
+                0,
+                1
+            ],
             "default-value": 0,
             "command-line-flag": "useParallel",
             "value-key": "[USE_PARALLEL]"
@@ -313,8 +344,12 @@
         {
             "id": "sources", 
             "name": "Sources",
-            "path-template": "[OUTFILE]",
-            "optional": false
+            "path-template": "[OUTFILE].mat",
+            "path-template-stripped-extensions": [
+                ".mat"
+            ],
+            "optional": false,
+            "value-key": "[SOURCES]"
         }
     ],
     "schema-version": "0.5", 

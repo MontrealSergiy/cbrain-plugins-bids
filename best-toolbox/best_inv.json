@@ -3,7 +3,7 @@
     "leadfield": "GMEG.mat",
     "adjacency_matrix": "vtcConn.mat",
     "mem_method": "cMEM",
-    "outfile": "sources.mat",
+    "outfile": "sources",
     "sensor_types": ["MEG"],
     "reconstruction_window": [1, 1.2],
     "baseline_window": [0, 1]
