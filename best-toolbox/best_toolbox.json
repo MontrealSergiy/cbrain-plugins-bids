@@ -352,6 +352,52 @@
             "value-key": "[SOURCES]"
         }
     ],
+    "groups": [
+        {
+            "id": "data_definition",
+            "name": "Data definition",
+            "members": [
+                "sensor_types",
+                "reconstruction_window",
+                "baseline",
+                "baseline_window",
+                "normalization"
+            ]
+        },
+        {
+            "id": "clustering",
+            "name": "Clustering",
+            "members": [
+                "clustering_method",
+                "msp_window",
+                "msp_threshold_method",
+                "msp_threshold",
+                "neighborhood_order",
+                "spatial_smoothing"
+            ]
+        },
+        {
+            "id": "model_priors",
+            "name": "Model priors",
+            "members": [
+                "active_mean_init",
+                "active_proba_init",
+                "lambda_init",
+                "active_proba_threshold",
+                "active_var_coef",
+                "inactive_var_coef"
+            ]
+        },
+        {
+            "id": "solver_options",
+            "name": "Solver options",
+            "members": [
+                "noise_cov_method",
+                "optim_method",
+                "use_parallel"
+            ]
+        }
+    ],
     "schema-version": "0.5", 
     "tags": {
         "domain": "neuroinformatics"
