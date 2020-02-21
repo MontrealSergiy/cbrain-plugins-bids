@@ -1,0 +1,38 @@
+{
+    "schema-version": "0.5",
+    "name": "listfailure",
+    "tool-version": "v0.1.0",
+    "command-line": "echo this is a [list] and this is a [file]",
+    "description": "A relatively small example to demo desctortion of the file by cbrain. Steps to reproduce: import to cbrain. Upload a few files. Start a task with two arbitrary file. Observe the command line", 
+    "container-image":
+        {
+            
+            "type": "singularity",
+            "image": "multifunkimlab/spark:1.2.1",
+            "index": "docker://"
+
+    },         
+
+    "inputs": [
+        {
+            "id": "list",
+            "optional": false,
+            "value-key": "[list]",
+            "list": true,
+            "command-line-flag": "--list",
+            "description": "Some file list. Could be e.g. the list of files with fMRI data to analyze.",
+            "type": "File",
+            "name": "files (with fMRI data_"
+        },
+        {
+            "id": "file",
+            "optional": false,
+            "value-key": "[file]",
+            "command-line-flag": "--file",
+            "description": "A single file, e.g. a grey-matter mask.",
+            "type": "File",
+            "name": "a file"
+        }
+    ]
+}
+
